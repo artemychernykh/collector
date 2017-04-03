@@ -4,6 +4,7 @@ import psycopg2
 import time
 import sys
 import parse_article as pa
+import create_db
 
 list_rss = ["https://russian.rt.com/rss", "https://meduza.io/rss/news",  \
 "https://lenta.ru/rss", "http://tass.ru/rss/v2.xml", \
@@ -15,6 +16,8 @@ N_sites = len(list_sites)
 
 HOUR = 3600
 LIMIT = 700
+
+create_db.create()
 con = psycopg2.connect(dbname='news', user='postgres', host='localhost')
 cur = con.cursor()
 
@@ -45,6 +48,7 @@ def download_xml(link):
     temfile.close()
 
 def parsing():
+    
     for i in range(N_sites):
         current_site = list_sites[i]
         current_url = list_rss[i]
@@ -78,7 +82,6 @@ def inf_parse():
         parsing()
         time.sleep(2*HOUR)
     
-
 if len(sys.argv) == 2 and sys.argv[1] == 'inf':
     inf_parse()
 else:

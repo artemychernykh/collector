@@ -1,9 +1,13 @@
 postgresql:
-    image: test5
+    image: theearl/initdb
+    container_name: pgsql
     ports:
      - "5433:5432"
     
 project:
     build: .
+    volumes_from:
+        - postgresql
     links:
         - postgresql
+    
