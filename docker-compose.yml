@@ -1,0 +1,9 @@
+postgresql:
+    image: test5
+    ports:
+     - "5433:5432"
+    
+project:
+    build: .
+    links:
+        - postgresql
