@@ -4,7 +4,6 @@ import psycopg2
 import time
 import sys
 import parse_article as pa
-import create_db
 
 list_rss = ["https://russian.rt.com/rss", "https://meduza.io/rss/news",  \
 "https://lenta.ru/rss", "http://tass.ru/rss/v2.xml", \
@@ -17,11 +16,21 @@ N_sites = len(list_sites)
 HOUR = 3600
 LIMIT = 700
 
-create_db.create()
+def create():
+    command = "CREATE TABLE news(site varchar(40), title varchar(400),\
+    description varchar(1500), article varchar(50000), date_news date, link varchar(200) UNIQUE)"
+    cur.execute(command)
+    con.commit()
+
 con = psycopg2.connect(dbname='news', user='postgres', host='localhost')
 cur = con.cursor()
 
-
+try:
+    create()
+except:
+    pass
+    
+    
 def screening(mess):
         mess = mess.replace('«', '"')
         mess = mess.replace('»', '"')
