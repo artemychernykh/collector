@@ -14,7 +14,7 @@ list_sites = ["RT", "meduza", "lenta.ru", "tass",  "rbc"]
 N_sites = len(list_sites)
 
 HOUR = 3600
-LIMIT = 3
+LIMIT = 300
 
 def create():
     command = "CREATE TABLE news(site varchar(40), title varchar(400),\
