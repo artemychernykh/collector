@@ -14,15 +14,15 @@ list_sites = ["RT", "meduza", "lenta.ru", "tass",  "rbc"]
 N_sites = len(list_sites)
 
 HOUR = 3600
-LIMIT = 700
+LIMIT = 3
 
 def create():
     command = "CREATE TABLE news(site varchar(40), title varchar(400),\
     description varchar(1500), article varchar(50000), date_news date, link varchar(200) UNIQUE)"
     cur.execute(command)
-    con.commit()
+    con.commit() 
 
-con = psycopg2.connect(dbname='news', user='postgres', host='localhost')
+con = psycopg2.connect(dbname='news', user='postgres',  host='postgresql')
 cur = con.cursor()
 
 try:
@@ -64,9 +64,12 @@ def parsing():
         download_xml(current_url)
         tree = ET.parse("temfile.xml")
         root = tree.getroot()
-        
+        i = 0
         #parse
         for item in root.iter('item'):
+            if i == LIMIT:
+                break
+            i += 1
             title = item.find('title')
             description = item.find('description')
             link = item.find('link')
@@ -95,3 +98,4 @@ if len(sys.argv) == 2 and sys.argv[1] == 'inf':
     inf_parse()
 else:
     parsing()
+    
