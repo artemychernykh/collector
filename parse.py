@@ -1,10 +1,17 @@
 import xml.etree.ElementTree as ET
 from urllib.request import urlopen
+from urllib.parse import urlparse
 import psycopg2
 import time
 import sys
+import os
 import parse_article as pa
 # git
+
+postgresql_url = os.getenv('POSTGRESQL_PORT')
+postgresql_url = urlparse(postgresql_url)
+HOST = postgresql_url.hostname
+PORT = postgresql_url.port
 
 list_rss = ["https://russian.rt.com/rss", "https://meduza.io/rss/news",  \
 "https://lenta.ru/rss", "http://tass.ru/rss/v2.xml", \
@@ -17,7 +24,6 @@ N_sites = len(list_sites)
 HOUR = 3600
 LIMIT = 300
 
-# здесь убрать
 def create():
     return 0
     command = "CREATE TABLE news(site varchar(40), title varchar(400),\
@@ -26,6 +32,7 @@ def create():
     con.commit() 
 
 con = psycopg2.connect(dbname='news', user='postgres',  host='postgresql')
+con = psycopg2.connect(dbname='news', user='postgres',  host=HOST,  port=PORT)
 cur = con.cursor()
 
 try:
