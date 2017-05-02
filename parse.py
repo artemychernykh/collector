@@ -4,6 +4,7 @@ import psycopg2
 import time
 import sys
 import parse_article as pa
+# git
 
 list_rss = ["https://russian.rt.com/rss", "https://meduza.io/rss/news",  \
 "https://lenta.ru/rss", "http://tass.ru/rss/v2.xml", \
@@ -16,7 +17,9 @@ N_sites = len(list_sites)
 HOUR = 3600
 LIMIT = 300
 
+# здесь убрать
 def create():
+    return 0
     command = "CREATE TABLE news(site varchar(40), title varchar(400),\
     description varchar(1500), article varchar(50000), date_news date, link varchar(200) UNIQUE)"
     cur.execute(command)
@@ -28,7 +31,7 @@ cur = con.cursor()
 try:
     create()
 except:
-    pass
+    con.commit()
     
     
 def screening(mess):
@@ -84,7 +87,7 @@ def parsing():
             try:
                 add(current_site,  title.text,  desc,  date.text,  link.text,  article)
             except:
-                pass
+                con.commit()
             
         print('done')
 
@@ -93,7 +96,8 @@ def inf_parse():
     while True:
         parsing()
         time.sleep(2*HOUR)
-    
+
+  
 if len(sys.argv) == 2 and sys.argv[1] == 'inf':
     inf_parse()
 else:
