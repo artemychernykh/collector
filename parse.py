@@ -6,7 +6,6 @@ import time
 import sys
 import os
 import parse_article as pa
-# git
 
 postgresql_url = os.getenv('POSTGRESQL_PORT')
 postgresql_url = urlparse(postgresql_url)
