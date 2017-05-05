@@ -10,4 +10,11 @@ project:
         - postgresql
     links:
         - postgresql
-    
+   
+rest:
+    build: ./RESTapi
+    volumes_from:
+        - postgresql
+    links:
+        - postgresql
+   
