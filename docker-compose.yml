@@ -1,5 +1,5 @@
 postgresql:
-    image: theearl/initdb
+    build: ./psql
     container_name: pgsql
     ports:
      - "5433:5432"
@@ -10,7 +10,7 @@ project:
         - postgresql
     links:
         - postgresql
-   
+       
 rest:
     build: ./RESTapi
     volumes_from:

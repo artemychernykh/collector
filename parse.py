@@ -23,19 +23,18 @@ N_sites = len(list_sites)
 HOUR = 3600
 LIMIT = 300
 
-def create():
-    return 0
+def create(con, cur):
     command = "CREATE TABLE news(site varchar(40), title varchar(400),\
     description varchar(1500), article varchar(50000), date_news date, link varchar(200) UNIQUE)"
     cur.execute(command)
     con.commit() 
 
-con = psycopg2.connect(dbname='news', user='postgres',  host='postgresql')
 con = psycopg2.connect(dbname='news', user='postgres',  host=HOST,  port=PORT)
 cur = con.cursor()
 
+time.sleep(10)
 try:
-    create()
+    create(con, cur)
 except:
     con.commit()
     
