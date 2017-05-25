@@ -29,7 +29,7 @@ def create(con, cur):
     cur.execute(command)
     con.commit() 
 
-con = psycopg2.connect(dbname='news', user='postgres',  host=HOST,  port=PORT)
+con = psycopg2.connect(dbname='news', user='postgres', password='postgres', host=HOST, port=PORT)
 cur = con.cursor()
 
 time.sleep(10)

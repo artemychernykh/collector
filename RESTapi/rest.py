@@ -9,7 +9,7 @@ def make_connection():
     postgresql_url = urlparse(postgresql_url)
     HOST = postgresql_url.hostname
     PORT = postgresql_url.port
-    con = psycopg2.connect(dbname='news', user='postgres',  host=HOST, port=PORT)
+    con = psycopg2.connect(dbname='news', user='postgres', password='postgres', host=HOST, port=PORT)
     cur = con.cursor()
     return con, cur
 
@@ -76,5 +76,5 @@ def dwnld_json():
     return flask.send_file('news.json')
 
 
-
-app.run(debug = True)
+if __name__ == '__main__':
+    app.run(debug = True)

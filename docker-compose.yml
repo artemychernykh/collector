@@ -1,20 +1,21 @@
 postgresql:
-    build: ./psql
-    container_name: pgsql
-    ports:
-     - "5433:5432"
+  build: ./psql
+  container_name: pgsql
+  volumes:
+  - ./data:/var/lib/postgresql/data
     
 project:
-    build: .
-    volumes_from:
-        - postgresql
-    links:
-        - postgresql
-       
+  build: .
+  volumes_from:
+  - postgresql
+  links:
+  - postgresql
+      
 rest:
-    build: ./RESTapi
-    volumes_from:
-        - postgresql
-    links:
-        - postgresql
-   
+  build: ./RESTapi
+  volumes_from:
+  - postgresql
+  links:
+  - postgresql
+  ports:
+  - 5000:5000
