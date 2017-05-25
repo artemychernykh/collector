@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Новости
+        </title>
+    </head>
+    <body>
+        <section>
+            <table border='1'>
+            {% for record in records %}
+                <tr>
+                    <td> {{record.1}} </td>
+                    <td> {{record.2}} </td>
+                    <td> {{record.4}} </td>
+                    <td> {{record.5}} </td>
+                </tr>
+                <tr>
+                    <td colspan="4"> {{record.3}} </td>
+                </tr>
+                
+            {% endfor %}
+            </table>
+        </section>
+    </body>
+</html>
+    
+    
