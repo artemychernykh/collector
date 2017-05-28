@@ -1,21 +1,37 @@
 postgresql:
-  build: ./psql
-  container_name: pgsql
-  volumes:
-  - ./data:/var/lib/postgresql/data
+    build: ./psql
+    container_name: pgrsql
+    volumes:
+        - ./data:/var/lib/postgresql/data
+    
+redis:
+    image: redis
+    hostname: redis
+    
+worker:
+    build: ./parse_article
+    links:
+        - redis
+    volumes_from:
+        - redis
     
 project:
-  build: .
-  volumes_from:
-  - postgresql
-  links:
-  - postgresql
-      
+    build: .
+    volumes_from:
+        - postgresql
+        - worker
+        - redis
+    links:
+        - postgresql
+        - worker
+        - redis
+          
 rest:
-  build: ./RESTapi
-  volumes_from:
-  - postgresql
-  links:
-  - postgresql
-  ports:
-  - 5000:5000
+    build: ./RESTapi
+    volumes_from:
+        - postgresql
+    links:
+        - postgresql
+    ports:
+    - 5000:5000
+        

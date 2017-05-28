@@ -1,0 +1,4 @@
+FROM python:3.4
+ADD tasks.py setting.py /
+RUN pip install celery redis celery-with-redis bs4 requests
+ENTRYPOINT celery -A tasks worker -l INFO

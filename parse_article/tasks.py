@@ -1,6 +1,11 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+from celery import Celery
 import requests
+
+app = Celery('task')
+app.config_from_object('setting')
+
 
 def write(strr): # delete
     file = open('123.txt', 'a')
@@ -51,7 +56,7 @@ def parse_rbc(page):
 def parse_tass(page):
     return take_paragraphs(page, "b-material-text__l")
 
-
+@app.task
 def take_article(site, link):
     
     page = take_page(link)
