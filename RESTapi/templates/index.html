@@ -1,28 +1,77 @@
 ﻿<!DOCTYPE html>
 <html>
     <head>
-        <title>
-            Новости
-        </title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename ='style.css')}}" type="text/css">
+        <title> Новости </title>
+        <script>
+            function d(event){
+                console.log('321');
+                var section = event.srcElement.parentElement;
+                var text = section.getElementsByClassName('news-text')[0].innerHTML;
+                var link = section.getElementsByTagName('a')[0].innerHTML;
+                var date = section.getElementsByTagName('time')[0].innerHTML;
+                var header = section.getElementsByClassName('panel-heading')[0].innerHTML;
+                
+                var mainNews = document.getElementById("main-news-text");
+                var mainNewsLink = document.getElementById("main-link");
+                var mainNewsDate = document.getElementById("main-date");
+                var mainNewsHeader = document.getElementById("main-header");
+                mainNews.innerHTML =text;
+                mainNewsLink.href = link;
+                mainNewsLink.style.display = "inline-block";
+                mainNewsDate.innerHTML = date;
+                mainNewsHeader.innerHTML = header;
+                console.log(mainNewsLink.href);}
+        </script>
     </head>
     <body>
-        <section>
-            <table border='1'>
-            {% for record in records %}
-                <tr>
-                    <td> {{record.site}} </td>
-                    <td> {{record.title}} </td>
-                    <td> {{record.description}} </td>
-                    <td> {{record.link}} </td>
-                </tr>
-                <tr>
-                    <td colspan="4"> {{record.article}} </td>
-                </tr>
-                
+        
+        <main class="row">
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <form class="navbar-form" role="form">
+                <div class="form-group">
+                  <input type="text" placeholder="" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Search</button>
+                </form>
+            </div>
+            {% for site in sites %}
+              <input type="radio" name="site" class="site-button button-{{site}}" id="site-{{site}}">
             {% endfor %}
-            </table>
-        </section>
+            <nav class="col-md-2">
+                    <h2>
+                        {% for site in sites %}
+                            <label for="site-{{site}}" class="mlabel {{site}}">{{site}}</label>
+                        {% endfor %}
+                    </h2>
+            </nav>
+            <div class="col-md-4 description">
+                {% for record in records %}
+                <section class="panel panel-default {{record.site}}" id="{{record.id}}" onclick='d(event)'>
+                    <div class="panel-heading"> [{{record.site}}]{{record.title}}</div>
+                    <div class="panel-body"> {{record.description}} </div>
+                    <a href class='link-section'> {{record.link}} </a>
+                    <time> {{record.date_news}} </time>
+                    <div class="news-text">
+                        <p>{{record.article}}</p>
+                    </div> 
+                </section>
+                {% endfor %}
+                <section class="panel panel-default rt" id="1" onclick='d(event)'>
+            </div>
+        <article class="col-md-6 main-article">
+            <span class="main-header" id="main-header"></span>
+            <br>
+            <div class="main-date" id="main-date"> </div>
+            <a href="" class="main-link" id="main-link">ссылка на источник</a>
+            <div class="main-news-text" id="main-news-text">
+            </div>
+        </article>
+        </main>
     </body>
 </html>
-    
     

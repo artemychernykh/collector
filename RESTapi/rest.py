@@ -34,12 +34,10 @@ app = flask.Flask(__name__)
   
 @app.route('/index')
 def index():
-    print('=======================================')
-    print('=======================================')
-    print('=======================================')
-    print('=======================================')
+    
     records = News.select()
-    return flask.render_template('index.html', records=records)
+    sites = list(map(lambda x: x.site, News.select(News.site).distinct()))
+    return flask.render_template('index.html', records=records, sites=sites)
     
 
 if __name__ == '__main__':

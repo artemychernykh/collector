@@ -1,0 +1,121 @@
+
+html,
+body
+{
+    height: 100%;
+}
+
+main
+{
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: 100%;
+}
+
+
+.site-button
+{
+    display:none;
+}
+
+.mlabel
+{
+    background-color: gray;
+    margin: 0px;
+    padding-left: 15px;
+    text-align: left;
+    display: block;
+}
+
+
+
+nav,
+article,
+.description
+{
+    margin-top: 50px;
+}
+
+article
+{
+    padding-top: 70px;
+}
+
+nav
+{
+    background-color: gray;
+    padding-right: 0px;
+}
+
+
+
+.description
+{
+    background-color: #ddd;
+    overflow-y: scroll;
+}
+
+
+time,
+.link-section,
+.main-link,
+section .news-text,
+#site-rt:checked ~ div section:not(.rt),
+#site-meduza:checked ~ div section:not(.meduza),
+#site-lenta:checked ~ div section:not(.lenta),
+#site-rbc:checked ~ div section:not(.rbc),
+#site-tass:checked ~ div section:not(.tass)
+{
+    display: none;
+}
+#site-rt:checked ~ nav .rt,
+#site-meduza:checked ~ nav .meduza,
+#site-lenta:checked ~ nav .lenta,
+#site-rbc:checked ~ nav .rbc,
+#site-tass:checked ~ nav .tass
+{
+    background-color: #222;
+    color: #eee;
+}
+
+
+
+section:hover,
+nav label:hover
+{
+    background-color: #fff;
+    cursor: pointer;
+}
+
+article
+{
+    position: relative;
+    background-color: #f0f0f0;
+}
+
+.panel-heading
+{
+    font-size: medium;
+}
+
+.main-header
+{
+    font: bold 120% serif;
+    background: #9ab;
+}
+
+.main-date
+{
+    font: italic 95% sans-serif;
+    width: 49;
+    display: inline-block;
+}
+
+.main-link
+{
+    font: italic 95% sans-serif;
+    width: 49%;
+    display: none;
+}
+

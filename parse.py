@@ -15,7 +15,7 @@ time.sleep(10)
 list_rss = ["https://russian.rt.com/rss", "https://meduza.io/rss/news",  \
 "https://lenta.ru/rss", "http://tass.ru/rss/v2.xml", \
 "http://static.feed.rbc.ru/rbc/internal/rss.rbc.ru/rbc.ru/mainnews.rss"]
-list_sites = ["RT", "meduza", "lenta.ru", "tass",  "rbc"]
+list_sites = ["rt", "meduza", "lenta", "tass",  "rbc"]
 N_sites = len(list_sites)
 HOUR = 3600
 LIMIT = 300

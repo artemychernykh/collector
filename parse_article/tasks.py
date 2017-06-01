@@ -61,7 +61,7 @@ def take_article(site, link):
     
     page = take_page(link)
         
-    sites = {"RT": parse_rt,  "meduza": parse_meduza,  "lenta.ru": parse_lenta,  \
+    sites = {"rt": parse_rt,  "meduza": parse_meduza,  "lenta": parse_lenta,  \
             "tass": parse_tass, "rbc": parse_rbc}
     if site in sites:
         return sites[site](page)
