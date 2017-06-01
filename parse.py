@@ -1,18 +1,16 @@
 import xml.etree.ElementTree as ET
 from urllib.request import urlopen
 from urllib.parse import urlparse
-import psycopg2
 import time
 import sys
 import os
 from tasks import take_article
+from peewee import *
+from playhouse.postgres_ext import PostgresqlExtDatabase
+
 
 time.sleep(10)
 
-postgresql_url = os.getenv('POSTGRESQL_PORT')
-postgresql_url = urlparse(postgresql_url)
-HOST = postgresql_url.hostname
-PORT = postgresql_url.port
 
 list_rss = ["https://russian.rt.com/rss", "https://meduza.io/rss/news",  \
 "https://lenta.ru/rss", "http://tass.ru/rss/v2.xml", \
@@ -22,47 +20,40 @@ N_sites = len(list_sites)
 HOUR = 3600
 LIMIT = 300
 
+postgresql_url = os.getenv('POSTGRESQL_PORT')
+postgresql_url = urlparse(postgresql_url)
+HOST = postgresql_url.hostname
+PORT = postgresql_url.port
 
-def create(con, cur):
-    command = "CREATE TABLE news(site varchar(40), title varchar(400),\
-    description varchar(1500), article varchar(50000), date_news date, link varchar(200) UNIQUE)"
-    cur.execute(command)
-    con.commit() 
-
-con = psycopg2.connect(dbname='news', user='postgres', password='postgres', host=HOST, port=PORT)
-cur = con.cursor()
-
-
-try:
-    create(con, cur)
-except:
-    con.commit()
+db = PostgresqlExtDatabase(
+     'news',
+     user='postgres',
+     password='postgres',
+     host=HOST, 
+     port=PORT,
+     register_hstore=False)
 
 
-command = "DELETE FROM news"
-cur.execute(command)
-con.commit()    
+class News(Model):
+    site = CharField(max_length=255)
+    title = CharField(max_length=1500)
+    description = CharField(max_length=5000)
+    article = CharField(null=True, max_length=50000)
+    date_news = DateTimeField()
+    link = CharField(unique=True)
+    id = IntegerField(null=True)
+    class Meta:
+        database = db
+        
+
+if not News.table_exists():
+    News.create_table()
     
+
 def screening(mess):
         mess = mess.replace('«', '"')
         mess = mess.replace('»', '"')
         return mess.replace("'",  "''")
-
-
-def add(site, title, description, date,  link): # to db
-    desc = screening(description)
-    title = screening(title)
-    command = "INSERT INTO news(site,title,description, date_news, link)\
-    VALUES('{}','{}','{}','{}','{}')".format(site, title, desc, date, link)
-    cur.execute(command)
-    con.commit()
-
-
-def add_article(article, link): 
-    article = screening(article)
-    command = "UPDATE news SET article='{}' WHERE link='{}'".format(article, link)
-    cur.execute(command)
-    con.commit()
 
 
 def download_xml(link):
@@ -73,9 +64,11 @@ def download_xml(link):
     temfile.write(xml)
     temfile.close()
 
+
 def parsing():
     
     tasks = []
+    Number_news = len(News.select())
     for i in range(N_sites):
         current_site = list_sites[i]
         current_url = list_rss[i]
@@ -88,12 +81,16 @@ def parsing():
             if i == LIMIT:
                 break
             i += 1
+            link = item.find('link')
+            if len(News.select().where(News.link==link.text)):
+                continue
             title = item.find('title')
             description = item.find('description')
-            link = item.find('link')
+            
             date = item.find('pubDate')
-            print(link.text )
-            # здесь проверка
+            print(link.text)
+            Number_news += 1
+            id = Number_news
             task = take_article.delay(current_site, link.text)
             tasks.append({'article': task, 'link': link.text})
             
@@ -101,21 +98,25 @@ def parsing():
                 desc = description.text
             else:
                 desc = ''
-            try:
-                add(current_site,  title.text,  desc,  date.text,  link.text)
-            except:
-                con.commit()
-    
+            News.create(
+                site=current_site, 
+                title=title.text, 
+                description=desc,
+                date_news=date.text, 
+                link=link.text, 
+                id=id)
+            
     # добавляет текст статьи 
     while True:
         complete_tasks = list(filter(lambda x: x['article'].ready(), tasks))
         tasks = list(filter(lambda x: x not in complete_tasks, tasks))
         for task in complete_tasks:
-            add_article(task['article'].get(), task['link'])
+            News.update(article=task['article'].get()).where(News.link==task['link']).execute()
+            
         if not tasks:
             break
         time.sleep(1)
-        print('done')
+    print('done')
 
 
 def inf_parse():

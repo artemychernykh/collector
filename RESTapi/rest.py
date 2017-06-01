@@ -1,37 +1,46 @@
 import flask
 import os
-import psycopg2
 from urllib.parse import urlparse
-
-def make_connection():
-    postgresql_url = os.getenv('POSTGRESQL_PORT')
-    postgresql_url = urlparse(postgresql_url)
-    HOST = postgresql_url.hostname
-    PORT = postgresql_url.port
-    con = psycopg2.connect(dbname='news', user='postgres', password='postgres', host=HOST, port=PORT)
-    cur = con.cursor()
-    return con, cur
+from peewee import *
+from playhouse.postgres_ext import PostgresqlExtDatabase
 
 
-def take_db(con, cur):
-    command = "SELECT * FROM news"
-    cur.execute(command)
-    con.commit()
-    lst_news = cur.fetchall()
-    return lst_news
+postgresql_url = os.getenv('POSTGRESQL_PORT')
+postgresql_url = urlparse(postgresql_url)
+host = postgresql_url.hostname
+port = postgresql_url.port
+    
+db = PostgresqlExtDatabase(
+     'news',
+     user='postgres',
+     password='postgres',
+     host=host, 
+     port=port,
+     register_hstore=False)
 
+class News(Model):
+    site = CharField(max_length=255)
+    title = CharField(max_length=1500)
+    description = CharField(max_length=5000)
+    article = CharField(null=True, max_length=50000)
+    date_news = DateTimeField()
+    link = CharField(unique=True)
+    class Meta:
+        database = db
+        
 
 app = flask.Flask(__name__)
 
   
 @app.route('/index')
-def dwnld_html():
-    con, cur = make_connection()
-    records = take_db(con, cur)
-    con.close()
+def index():
+    print('=======================================')
+    print('=======================================')
+    print('=======================================')
+    print('=======================================')
+    records = News.select()
     return flask.render_template('index.html', records=records)
-    return flask.send_file('news.html')
-
+    
 
 if __name__ == '__main__':
     app.run(debug = True)

@@ -10,13 +10,13 @@
             <table border='1'>
             {% for record in records %}
                 <tr>
-                    <td> {{record.1}} </td>
-                    <td> {{record.2}} </td>
-                    <td> {{record.4}} </td>
-                    <td> {{record.5}} </td>
+                    <td> {{record.site}} </td>
+                    <td> {{record.title}} </td>
+                    <td> {{record.description}} </td>
+                    <td> {{record.link}} </td>
                 </tr>
                 <tr>
-                    <td colspan="4"> {{record.3}} </td>
+                    <td colspan="4"> {{record.article}} </td>
                 </tr>
                 
             {% endfor %}
