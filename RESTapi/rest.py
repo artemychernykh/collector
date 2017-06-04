@@ -38,7 +38,11 @@ def index():
     records = News.select()
     sites = list(map(lambda x: x.site, News.select(News.site).distinct()))
     return flask.render_template('index.html', records=records, sites=sites)
-    
 
+
+@app.route('/search=<word>')
+def search(word):
+    return word
+    
 if __name__ == '__main__':
     app.run(debug = True)

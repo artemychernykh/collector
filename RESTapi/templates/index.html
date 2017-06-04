@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -6,10 +6,20 @@
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ url_for('static', filename ='style.css')}}" type="text/css">
-        <title> Новости </title>
+        <title>Новости </title>
         <script>
+            function someCheck(event) {
+            }
+            
+            function search(event) {
+                var form = document.forms.searchfield;
+                var word = form.elements.field.value;
+                if (word.length > 0){
+                    document.location.href = '/search=' + word;
+                }
+            }
+            
             function d(event){
-                console.log('321');
                 var section = event.srcElement.parentElement;
                 var text = section.getElementsByClassName('news-text')[0].innerHTML;
                 var link = section.getElementsByTagName('a')[0].innerHTML;
@@ -32,15 +42,15 @@
         
         <main class="row">
             <div class="navbar navbar-inverse navbar-fixed-top">
-                <form class="navbar-form" role="form">
+                <form class="navbar-form" role="form" name="searchfield">
                 <div class="form-group">
-                  <input type="text" placeholder="" class="form-control">
+                  <input type="text" placeholder="" class="form-control" name="field">
                 </div>
-                <button type="submit" class="btn btn-success">Search</button>
+                <input type="button" value="Search" class="btn btn-success" onclick="search(event)">
                 </form>
             </div>
             {% for site in sites %}
-              <input type="radio" name="site" class="site-button button-{{site}}" id="site-{{site}}">
+              <input type="checkbox" name="site" class="site-button button-{{site}}" id="site-{{site}}" onclick="someCheck(event)">
             {% endfor %}
             <nav class="col-md-2">
                     <h2>
