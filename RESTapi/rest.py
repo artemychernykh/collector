@@ -18,16 +18,17 @@ db = PostgresqlExtDatabase(
      register_hstore=False)
 
 class News(Model):
-    site = CharField(max_length=255)
-    title = CharField(max_length=1500)
-    description = CharField(max_length=5000)
-    article = CharField(null=True, max_length=50000)
+    site = TextField()
+    title = TextField()
+    description = TextField()
+    article = TextField(null=True)
     date_news = DateTimeField()
-    link = CharField(unique=True)
+    link = TextField(unique=True)
+    id = IntegerField(null=True,  index=True)
     search_content = TSVectorField(null=True)
     class Meta:
         database = db
-        
+         
 
 app = flask.Flask(__name__)
 
