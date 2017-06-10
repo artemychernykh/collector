@@ -2,8 +2,7 @@ import flask
 import os
 from urllib.parse import urlparse
 from peewee import *
-from playhouse.postgres_ext import PostgresqlExtDatabase
-
+from playhouse.postgres_ext import *
 
 postgresql_url = os.getenv('POSTGRESQL_PORT')
 postgresql_url = urlparse(postgresql_url)
@@ -25,6 +24,7 @@ class News(Model):
     article = CharField(null=True, max_length=50000)
     date_news = DateTimeField()
     link = CharField(unique=True)
+    search_content = TSVectorField(null=True)
     class Meta:
         database = db
         
@@ -32,17 +32,22 @@ class News(Model):
 app = flask.Flask(__name__)
 
   
+@app.route('/')
 @app.route('/index')
-def index():
-    
-    records = News.select()
+def dwnld_html():
+    records = News.select().order_by(News.date_news.desc())
     sites = list(map(lambda x: x.site, News.select(News.site).distinct()))
     return flask.render_template('index.html', records=records, sites=sites)
 
 
 @app.route('/search=<word>')
 def search(word):
-    return word
+    records = (News
+                .select()
+                .order_by(News.date_news.desc())
+                .where(News.search_content.match(word)))
+    return flask.render_template('search.html', records=records)
+    
     
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run()

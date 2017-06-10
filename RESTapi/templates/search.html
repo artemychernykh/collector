@@ -1,0 +1,80 @@
+﻿<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename ='style.css')}}" type="text/css">
+        <title> Поиск </title>
+        <style>
+        body
+        {
+            background-color: #ddd;
+            margin: 10px;
+            margin-top: 70px;
+        }
+        .news-text
+        {
+            display: none;
+            margin: 10px;
+            margin-top: 0px;
+            
+        }
+        .link-section,
+        time
+        {
+            display: inline-block;
+            font-style: italic;
+        }
+        
+        </style>
+        <script>
+            function search(event) {
+                var form = document.forms.searchfield;
+                var word = form.elements.field.value;
+                if (word.length > 0){
+                    document.location.href = '/search=' + word;
+                }
+            }
+            
+            function show(event){
+                var articles = document.getElementsByClassName("news-text");
+                var section = event.srcElement.parentElement;
+                var article = section.getElementsByClassName("news-text")[0];
+                var styleDisp = article.style.display;
+                
+                for (var i = 0; i < articles.length; i ++){
+                    articles[i].style.display = "none";
+                }
+                
+                if (styleDisp === "none"){
+                    article.style.display = "inline-block";
+                } else{
+                    article.style.display = "none";
+                }
+            }
+        </script>
+    </head>
+    <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <form class="navbar-form" role="form" name="searchfield">
+            <div class="form-group">
+                <input type="text" placeholder="" class="form-control" name="field">
+            </div>
+            <input type="button" value="Search" class="btn btn-success" onclick="search(event)">
+        </form>
+    </div>
+    {% for record in records %}
+        <section class="panel panel-default {{record.site}}" id="{{record.id}}" onclick='show(event)'>
+            <div class="panel-heading"> [{{record.site}}]{{record.title}}</div>
+            <div class="panel-body"> {{record.description}} </div>
+            
+            <div class="news-text">
+                <a href="{{record.link}}" class='link-section'> ссылка на источник </a>
+                <time> {{record.date_news}} </time>
+                <p>{{record.article}}</p>
+            </div> 
+        </section>
+    {% endfor %}
+    </body>
+</html>

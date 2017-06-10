@@ -9,6 +9,16 @@
         <title>Новости </title>
         <script>
             function someCheck(event) {
+                var button = event.srcElement;
+                
+                var buttons = document.getElementsByName('site');
+                for (var i=0; i < buttons.length; i++) {
+                    if (button.id !== buttons[i].id){
+                        buttons[i].checked = false;
+                    } else{
+                        console.log('123');}
+                }
+                
             }
             
             function search(event) {
@@ -19,7 +29,7 @@
                 }
             }
             
-            function d(event){
+            function show(event){
                 var section = event.srcElement.parentElement;
                 var text = section.getElementsByClassName('news-text')[0].innerHTML;
                 var link = section.getElementsByTagName('a')[0].innerHTML;
@@ -49,6 +59,7 @@
                 <input type="button" value="Search" class="btn btn-success" onclick="search(event)">
                 </form>
             </div>
+            {% autoescape false %}
             {% for site in sites %}
               <input type="checkbox" name="site" class="site-button button-{{site}}" id="site-{{site}}" onclick="someCheck(event)">
             {% endfor %}
@@ -61,7 +72,7 @@
             </nav>
             <div class="col-md-4 description">
                 {% for record in records %}
-                <section class="panel panel-default {{record.site}}" id="{{record.id}}" onclick='d(event)'>
+                <section class="panel panel-default {{record.site}}" id="{{record.id}}" onclick='show(event)'>
                     <div class="panel-heading"> [{{record.site}}]{{record.title}}</div>
                     <div class="panel-body"> {{record.description}} </div>
                     <a href class='link-section'> {{record.link}} </a>
@@ -73,6 +84,7 @@
                 {% endfor %}
                 <section class="panel panel-default rt" id="1" onclick='d(event)'>
             </div>
+            {% endautoescape %}
         <article class="col-md-6 main-article">
             <span class="main-header" id="main-header"></span>
             <br>

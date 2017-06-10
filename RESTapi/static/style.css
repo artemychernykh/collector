@@ -54,6 +54,7 @@ nav
 {
     background-color: #ddd;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 
@@ -117,5 +118,13 @@ article
     font: italic 95% sans-serif;
     width: 49%;
     display: none;
+}
+.main-article
+{
+    overflow-y: scroll;
+}
+body
+ {
+     overflow-x: hidden;
 }
 
