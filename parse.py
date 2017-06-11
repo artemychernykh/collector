@@ -75,7 +75,7 @@ def parsing():
             if i == LIMIT:
                 break
             i += 1
-            link = item.find('guid')
+            link = item.find('link')
             if len(News.select().where(News.link==link.text)):
                 continue
             title = item.find('title')
