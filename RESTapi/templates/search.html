@@ -64,6 +64,7 @@
             <input type="button" value="Search" class="btn btn-success" onclick="search(event)">
         </form>
     </div>
+    {% autoescape false %}
     {% for record in records %}
         <section class="panel panel-default {{record.site}}" id="{{record.id}}" onclick='show(event)'>
             <div class="panel-heading"> [{{record.site}}]{{record.title}}</div>
@@ -76,5 +77,6 @@
             </div> 
         </section>
     {% endfor %}
+    {% endautoescape %}
     </body>
 </html>
