@@ -35,7 +35,7 @@ app = flask.Flask(__name__)
   
 @app.route('/')
 @app.route('/index')
-def html():
+def index():
     records = News.select().order_by(News.date_news.desc())
     sites = list(map(lambda x: x.site, News.select(News.site).distinct()))
     return flask.render_template('index.html', records=records, sites=sites)
